@@ -1,13 +1,15 @@
 package normalno.controller;
 
 import normalno.EmailMessage;
-import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
 public class MailController {
 
+    @GetMapping("/mails")
     public List<EmailMessage> getMails(){
 
         // 1. Создаем фейковое письмо
