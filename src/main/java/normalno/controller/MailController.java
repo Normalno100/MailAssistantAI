@@ -1,6 +1,5 @@
 package normalno.controller;
 
-import lombok.RequiredArgsConstructor;
 import normalno.EmailMessage;
 
 import normalno.service.MailService;
