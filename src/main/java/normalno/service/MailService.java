@@ -1,9 +1,10 @@
 package normalno.service;
 
+import normalno.EmailMessage;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.mail.*;
 import jakarta.mail.internet.MimeMessage;
-import normalno.EmailMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
