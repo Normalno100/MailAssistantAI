@@ -1,22 +1,21 @@
 package normalno.service;
 
 import normalno.EmailMessage;
+import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.stereotype.Service;
 
 @Service
-class AiService {
+public class AiService {
 
-    private final OpenAiChatModel chatModel;
+    private final ChatModel chatModel;
 
-    public AiService(OpenAiChatModel chatModel) {
+    public AiService(ChatModel chatModel) {
         this.chatModel = chatModel;
     }
 
     public String analyzeEmail(EmailMessage email) {
-        // Формируем текст запроса (prompt)
         String text = String.format(
                 """
                 Ты — интеллектуальный ассистент, анализирующий входящие письма.
@@ -47,13 +46,14 @@ class AiService {
                 email.getFrom(), email.getTo(), email.getSubject(), email.getBody()
         );
 
-        // Создаём объект Prompt
-        Prompt prompt = new Prompt(text);
-
-        // Отправляем запрос в модель
-        ChatResponse response = chatModel.call(prompt);
-
-        // Возвращаем текст ответа
-        return response.getResult().getOutput().getText();
+        try {
+            Prompt prompt = new Prompt(text);
+            ChatResponse response = chatModel.call(prompt);
+            return response.getResult().getOutput().getText();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Ошибка при анализе письма: " + e.getMessage();
+        }
     }
 }
+

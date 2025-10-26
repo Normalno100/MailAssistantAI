@@ -15,6 +15,8 @@ import java.util.Properties;
 @Service
 public class MailService {
 
+    private final AiService aiService;
+
     @Value("${mail.user}")
     private String username;
 
@@ -28,6 +30,10 @@ public class MailService {
     private String port;
 
     private Store store;
+
+    public MailService(AiService aiService){
+        this.aiService = aiService;
+    }
 
     @PostConstruct
     public void init(){
@@ -115,6 +121,14 @@ public class MailService {
                                 break;
                             }
                         }
+                    }
+
+                    try {
+                        String analysis = aiService.analyzeEmail(email);
+                        email.setAiAnalysis(analysis);
+                    } catch (Exception e) {
+                        email.setAiAnalysis("Ошибка анализа письма: " + e.getMessage());
+                        e.printStackTrace();
                     }
 
                     emails.add(email);

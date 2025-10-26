@@ -31,6 +31,10 @@
 			<url>https://repo.spring.io/milestone</url>
 		</repository>
 		<repository>
+			<id>spring-releases</id>
+			<url>https://repo.spring.io/release</url>
+		</repository>
+		<repository>
 			<id>spring-snapshots</id>
 			<name>Spring Snapshots</name>
 			<url>https://repo.spring.io/snapshot</url>
@@ -53,7 +57,7 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
-		<!-- Spring AI (OpenAI, Groq и др.) -->
+		<!-- Spring AI OpenAI starter (для GigaChat через OpenAI-compatible API) -->
 		<dependency>
 			<groupId>org.springframework.ai</groupId>
 			<artifactId>spring-ai-openai-spring-boot-starter</artifactId>
@@ -74,6 +78,19 @@
 			<artifactId>javax.mail</artifactId>
 			<version>1.6.2</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.ai</groupId>
+			<artifactId>spring-ai-openai-spring-boot-starter</artifactId>
+			<version>1.0.0-M6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.ai</groupId>
+			<artifactId>spring-ai-gigachat-spring-boot-starter</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 
 		<!-- Тестирование -->
 		<dependency>
