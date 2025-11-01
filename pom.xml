@@ -57,13 +57,6 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
-		<!-- Spring AI OpenAI starter (для GigaChat через OpenAI-compatible API) -->
-		<dependency>
-			<groupId>org.springframework.ai</groupId>
-			<artifactId>spring-ai-openai-spring-boot-starter</artifactId>
-			<version>1.0.0-M6</version>
-		</dependency>
-
 		<!-- Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -80,17 +73,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.ai</groupId>
-			<artifactId>spring-ai-openai-spring-boot-starter</artifactId>
-			<version>1.0.0-M6</version>
+			<groupId>chat.giga</groupId>
+			<artifactId>spring-ai-starter-model-gigachat</artifactId>
+			<version>1.0.6</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.ai</groupId>
-			<artifactId>spring-ai-gigachat-spring-boot-starter</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-
 
 		<!-- Тестирование -->
 		<dependency>

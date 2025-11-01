@@ -1,18 +1,16 @@
 package normalno.service;
 
 import normalno.EmailMessage;
-import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AiService {
 
-    private final ChatModel chatModel;
+    private final ChatClient chatClient;
 
-    public AiService(ChatModel chatModel) {
-        this.chatModel = chatModel;
+    public AiService(ChatClient.Builder chatClientBuilder) {
+        this.chatClient = chatClientBuilder.build();
     }
 
     public String analyzeEmail(EmailMessage email) {
@@ -47,9 +45,7 @@ public class AiService {
         );
 
         try {
-            Prompt prompt = new Prompt(text);
-            ChatResponse response = chatModel.call(prompt);
-            return response.getResult().getOutput().getText();
+            return chatClient.prompt(text).call().content();
         } catch (Exception e) {
             e.printStackTrace();
             return "Ошибка при анализе письма: " + e.getMessage();
