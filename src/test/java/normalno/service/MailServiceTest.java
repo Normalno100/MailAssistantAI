@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
+import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,7 +38,7 @@ class MailServiceTest {
     @BeforeEach
     void setUp() {
         mailService = new MailService(aiService);
-        
+
         // Устанавливаем тестовые значения через рефлексию
         ReflectionTestUtils.setField(mailService, "username", "test@example.com");
         ReflectionTestUtils.setField(mailService, "password", "password");
@@ -69,7 +70,7 @@ class MailServiceTest {
         MimeMessage mockMessage = mock(MimeMessage.class);
         when(mockMessage.getFrom()).thenReturn(new Address[]{new InternetAddress("sender@example.com")});
         when(mockMessage.getRecipients(Message.RecipientType.TO))
-            .thenReturn(new Address[]{new InternetAddress("receiver@example.com")});
+                .thenReturn(new Address[]{new InternetAddress("receiver@example.com")});
         when(mockMessage.getSubject()).thenReturn("Test Subject");
         when(mockMessage.getContent()).thenReturn("Test email body");
 
@@ -77,7 +78,7 @@ class MailServiceTest {
         when(inbox.getMessages()).thenReturn(messages);
 
         when(aiService.analyzeEmail(any(EmailMessage.class)))
-            .thenReturn("{\"summary\":\"Test\",\"priority\":\"medium\"}");
+                .thenReturn("{\"summary\":\"Test\",\"priority\":\"medium\"}");
 
         // Act
         List<EmailMessage> result = mailService.fetchEmails();
@@ -100,13 +101,20 @@ class MailServiceTest {
         when(store.getFolder("INBOX")).thenReturn(inbox);
         doNothing().when(inbox).open(Folder.READ_ONLY);
 
-        // Создаём 15 мок-сообщений
+        // Создаём 15 мок-сообщений, но настраиваем только те, которые будут использоваться (последние 10)
         Message[] messages = new Message[15];
-        for (int i = 0; i < 15; i++) {
+
+        // Первые 5 сообщений не будут обрабатываться, поэтому не мокаем их детально
+        for (int i = 0; i < 5; i++) {
+            messages[i] = mock(MimeMessage.class);
+        }
+
+        // Последние 10 сообщений (индексы 5-14) будут обработаны
+        for (int i = 5; i < 15; i++) {
             MimeMessage mockMessage = mock(MimeMessage.class);
             when(mockMessage.getFrom()).thenReturn(new Address[]{new InternetAddress("sender" + i + "@example.com")});
             when(mockMessage.getRecipients(Message.RecipientType.TO))
-                .thenReturn(new Address[]{new InternetAddress("receiver@example.com")});
+                    .thenReturn(new Address[]{new InternetAddress("receiver@example.com")});
             when(mockMessage.getSubject()).thenReturn("Subject " + i);
             when(mockMessage.getContent()).thenReturn("Body " + i);
             messages[i] = mockMessage;
@@ -114,7 +122,7 @@ class MailServiceTest {
 
         when(inbox.getMessages()).thenReturn(messages);
         when(aiService.analyzeEmail(any(EmailMessage.class)))
-            .thenReturn("{\"summary\":\"Test\"}");
+                .thenReturn("{\"summary\":\"Test\"}");
 
         // Act
         List<EmailMessage> result = mailService.fetchEmails();
@@ -141,7 +149,7 @@ class MailServiceTest {
 
         when(mockMessage.getFrom()).thenReturn(new Address[]{new InternetAddress("sender@example.com")});
         when(mockMessage.getRecipients(Message.RecipientType.TO))
-            .thenReturn(new Address[]{new InternetAddress("receiver@example.com")});
+                .thenReturn(new Address[]{new InternetAddress("receiver@example.com")});
         when(mockMessage.getSubject()).thenReturn("Multipart Email");
         when(mockMessage.getContent()).thenReturn(multipart);
 
@@ -154,7 +162,7 @@ class MailServiceTest {
         when(inbox.getMessages()).thenReturn(messages);
 
         when(aiService.analyzeEmail(any(EmailMessage.class)))
-            .thenReturn("{\"summary\":\"Test\"}");
+                .thenReturn("{\"summary\":\"Test\"}");
 
         // Act
         List<EmailMessage> result = mailService.fetchEmails();
@@ -174,7 +182,7 @@ class MailServiceTest {
         MimeMessage mockMessage = mock(MimeMessage.class);
         when(mockMessage.getFrom()).thenReturn(null);
         when(mockMessage.getRecipients(Message.RecipientType.TO))
-            .thenReturn(new Address[]{new InternetAddress("receiver@example.com")});
+                .thenReturn(new Address[]{new InternetAddress("receiver@example.com")});
         when(mockMessage.getSubject()).thenReturn("No Sender");
         when(mockMessage.getContent()).thenReturn("Body");
 
@@ -182,7 +190,7 @@ class MailServiceTest {
         when(inbox.getMessages()).thenReturn(messages);
 
         when(aiService.analyzeEmail(any(EmailMessage.class)))
-            .thenReturn("{\"summary\":\"Test\"}");
+                .thenReturn("{\"summary\":\"Test\"}");
 
         // Act
         List<EmailMessage> result = mailService.fetchEmails();
@@ -202,7 +210,7 @@ class MailServiceTest {
         MimeMessage mockMessage = mock(MimeMessage.class);
         when(mockMessage.getFrom()).thenReturn(new Address[]{new InternetAddress("sender@example.com")});
         when(mockMessage.getRecipients(Message.RecipientType.TO))
-            .thenReturn(new Address[]{new InternetAddress("receiver@example.com")});
+                .thenReturn(new Address[]{new InternetAddress("receiver@example.com")});
         when(mockMessage.getSubject()).thenReturn("Test");
         when(mockMessage.getContent()).thenReturn("Body");
 
@@ -210,7 +218,7 @@ class MailServiceTest {
         when(inbox.getMessages()).thenReturn(messages);
 
         when(aiService.analyzeEmail(any(EmailMessage.class)))
-            .thenThrow(new RuntimeException("AI Service Error"));
+                .thenThrow(new RuntimeException("AI Service Error"));
 
         // Act
         List<EmailMessage> result = mailService.fetchEmails();

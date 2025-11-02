@@ -7,10 +7,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.prompt.Prompt;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -60,10 +59,8 @@ class AiServiceTest {
         when(requestSpec.call()).thenReturn(callResponseSpec);
         when(callResponseSpec.content()).thenReturn(expectedResponse);
 
-        // Act
         String result = aiService.analyzeEmail(email);
 
-        // Assert
         assertThat(result).isNotNull();
         assertThat(result).contains("summary");
         assertThat(result).contains("intent");
@@ -123,7 +120,7 @@ class AiServiceTest {
 
     @Test
     void analyzeEmail_shouldFormatPromptCorrectly() {
-        // Arrange
+
         EmailMessage email = new EmailMessage();
         email.setFrom("test@example.com");
         email.setTo("recipient@example.com");

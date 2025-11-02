@@ -2,6 +2,7 @@ package normalno.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import normalno.EmailMessage;
+import normalno.service.AiService;
 import normalno.service.MailService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -28,6 +30,9 @@ class MailControllerTest {
 
     @MockBean
     private MailService mailService;
+
+    @MockBean
+    private AiService aiService; // Добавляем мок для AiService
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -54,7 +59,7 @@ class MailControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/mails")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -75,7 +80,7 @@ class MailControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/mails")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(0)));
@@ -90,8 +95,10 @@ class MailControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/mails")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is5xxServerError());
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.message").value("Service error"))
+                .andExpect(jsonPath("$.error").value("Internal Server Error"));
 
         verify(mailService, times(1)).fetchEmails();
     }
@@ -107,7 +114,7 @@ class MailControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/mails")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
 
