@@ -8,7 +8,7 @@ class EmailMessageTest {
 
     @Test
     void emailMessage_shouldCreateWithAllFields() {
-        // Arrange & Act
+
         EmailMessage email = new EmailMessage();
         email.setFrom("sender@example.com");
         email.setTo("receiver@example.com");
@@ -16,7 +16,6 @@ class EmailMessageTest {
         email.setBody("Test Body");
         email.setAiAnalysis("{\"priority\":\"high\"}");
 
-        // Assert
         assertThat(email.getFrom()).isEqualTo("sender@example.com");
         assertThat(email.getTo()).isEqualTo("receiver@example.com");
         assertThat(email.getSubject()).isEqualTo("Test Subject");
@@ -26,10 +25,9 @@ class EmailMessageTest {
 
     @Test
     void emailMessage_shouldHaveNullFieldsByDefault() {
-        // Arrange & Act
+
         EmailMessage email = new EmailMessage();
 
-        // Assert
         assertThat(email.getFrom()).isNull();
         assertThat(email.getTo()).isNull();
         assertThat(email.getSubject()).isNull();
@@ -39,7 +37,7 @@ class EmailMessageTest {
 
     @Test
     void emailMessage_shouldSupportEqualsAndHashCode() {
-        // Arrange
+
         EmailMessage email1 = new EmailMessage();
         email1.setFrom("sender@example.com");
         email1.setSubject("Test");
@@ -48,42 +46,37 @@ class EmailMessageTest {
         email2.setFrom("sender@example.com");
         email2.setSubject("Test");
 
-        // Assert
         assertThat(email1).isEqualTo(email2);
         assertThat(email1.hashCode()).isEqualTo(email2.hashCode());
     }
 
     @Test
     void emailMessage_shouldSupportToString() {
-        // Arrange
+
         EmailMessage email = new EmailMessage();
         email.setFrom("sender@example.com");
         email.setSubject("Test Subject");
 
-        // Act
         String toString = email.toString();
 
-        // Assert
         assertThat(toString).contains("sender@example.com");
         assertThat(toString).contains("Test Subject");
     }
 
     @Test
     void emailMessage_shouldAllowModification() {
-        // Arrange
+
         EmailMessage email = new EmailMessage();
         email.setSubject("Original Subject");
 
-        // Act
         email.setSubject("Modified Subject");
 
-        // Assert
         assertThat(email.getSubject()).isEqualTo("Modified Subject");
     }
 
     @Test
     void emailMessage_shouldHandleEmptyStrings() {
-        // Arrange & Act
+
         EmailMessage email = new EmailMessage();
         email.setFrom("");
         email.setTo("");
@@ -91,7 +84,6 @@ class EmailMessageTest {
         email.setBody("");
         email.setAiAnalysis("");
 
-        // Assert
         assertThat(email.getFrom()).isEmpty();
         assertThat(email.getTo()).isEmpty();
         assertThat(email.getSubject()).isEmpty();
@@ -101,25 +93,22 @@ class EmailMessageTest {
 
     @Test
     void emailMessage_shouldHandleLongContent() {
-        // Arrange
+
         String longBody = "A".repeat(10000);
         EmailMessage email = new EmailMessage();
 
-        // Act
         email.setBody(longBody);
 
-        // Assert
         assertThat(email.getBody()).hasSize(10000);
     }
 
     @Test
     void emailMessage_shouldHandleSpecialCharacters() {
-        // Arrange & Act
+
         EmailMessage email = new EmailMessage();
         email.setSubject("Test: Специальные символы & <HTML>");
         email.setBody("Body with\nnewlines\tand\ttabs");
 
-        // Assert
         assertThat(email.getSubject()).contains("Специальные символы");
         assertThat(email.getBody()).contains("\n");
         assertThat(email.getBody()).contains("\t");

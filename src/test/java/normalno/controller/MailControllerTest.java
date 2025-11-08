@@ -32,7 +32,7 @@ class MailControllerTest {
     private MailService mailService;
 
     @MockBean
-    private AiService aiService; // Добавляем мок для AiService
+    private AiService aiService;
 
     @Autowired
     private ObjectMapper objectMapper;

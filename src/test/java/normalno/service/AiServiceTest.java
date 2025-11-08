@@ -82,19 +82,16 @@ class AiServiceTest {
 
         when(chatClient.prompt(anyString())).thenThrow(new RuntimeException("API Error"));
 
-        // Act
         String result = aiService.analyzeEmail(email);
 
-        // Assert
         assertThat(result).contains("Ошибка при анализе письма");
         assertThat(result).contains("API Error");
     }
 
     @Test
     void analyzeEmail_shouldHandleNullFields() {
-        // Arrange
+
         EmailMessage email = new EmailMessage();
-        // Оставляем поля null
 
         String expectedResponse = """
                 {
@@ -110,10 +107,8 @@ class AiServiceTest {
         when(requestSpec.call()).thenReturn(callResponseSpec);
         when(callResponseSpec.content()).thenReturn(expectedResponse);
 
-        // Act
         String result = aiService.analyzeEmail(email);
 
-        // Assert
         assertThat(result).isNotNull();
         verify(chatClient, times(1)).prompt(anyString());
     }
@@ -131,10 +126,8 @@ class AiServiceTest {
         when(requestSpec.call()).thenReturn(callResponseSpec);
         when(callResponseSpec.content()).thenReturn("{}");
 
-        // Act
         aiService.analyzeEmail(email);
 
-        // Assert
         verify(chatClient).prompt(argThat((String prompt) ->
                 prompt.contains("test@example.com") &&
                         prompt.contains("recipient@example.com") &&
