@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.ai.chat.client.ChatClient;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +22,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations = "classpath:application-test.properties")
+@TestPropertySource(properties = {
+        "mail.user=test@example.com",
+        "mail.password=test-password",
+        "mail.imap.host=localhost",
+        "mail.imap.port=993",
+        "mail.connect.enabled=false",
+        "spring.ai.gigachat.enabled=false"
+})
 class MailAssistantIntegrationTest {
 
     @LocalServerPort
@@ -33,9 +41,13 @@ class MailAssistantIntegrationTest {
     @MockBean
     private MailService mailService;
 
+    @MockBean
+    private ChatClient.Builder chatClientBuilder;
+
     @Test
     void contextLoads() {
         // Проверяем, что контекст Spring успешно загружается
+        assertThat(restTemplate).isNotNull();
     }
 
     @Test
@@ -91,12 +103,5 @@ class MailAssistantIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody()).isEmpty();
-    }
-
-    @Test
-    void application_shouldHaveCorrectBeans() {
-        // Проверяем, что все необходимые бины созданы
-        assertThat(restTemplate).isNotNull();
-        assertThat(mailService).isNotNull();
     }
 }
