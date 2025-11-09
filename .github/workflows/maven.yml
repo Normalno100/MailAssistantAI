@@ -40,6 +40,3 @@ jobs:
           name: spring-ai-mail-analyzer
           path: target/*.jar
 
-      # (опционально) Отправляем отчёт о зависимостях
-      - name: Update dependency graph
-        uses: advanced-security/maven-dependency-submission-action@v4
